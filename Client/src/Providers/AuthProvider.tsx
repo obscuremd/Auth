@@ -1,10 +1,12 @@
 import { useSignIn, useSignUp } from "@clerk/clerk-react";
 import { createContext, PropsWithChildren, useContext } from "react";
 import { characters } from "../Exports/Constatants";
+import axios from "axios";
 
 interface LoginProps {
     email: string;
     password: string;
+    name?: string;
     setLoading: (loading: boolean) => void;
     setVerification:(verification: boolean) => void
     setVerificationButton:(verification: number) => void
@@ -25,6 +27,8 @@ interface LoginProps {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export default function AuthProvider ({children}:PropsWithChildren){
+
+        const url = 'https://auth-black-six.vercel.app'
 
         const {isLoaded:signInLoaded, signIn, setActive:signInActive} = useSignIn()
         const {isLoaded:signUpLoaded, signUp, setActive:signUpActive} = useSignUp()
@@ -67,13 +71,9 @@ export default function AuthProvider ({children}:PropsWithChildren){
             }
         };
     
-        const Register =async({ email, password, setLoading, setVerification, setVerificationButton }: LoginProps)=>{
-
-            if(!signUpLoaded){
-              return
-            }
+        const Register =async({ email, password, name ,setLoading, setVerification, setVerificationButton }: LoginProps)=>{
         
-            if( email === '' && password === ''){
+            if( email === '' && password === '' && name === ''){
               setTimeout(()=>{
                 alert('fields must not be empty')
                 setLoading(false)
@@ -94,42 +94,19 @@ export default function AuthProvider ({children}:PropsWithChildren){
               }, 2000)
             }
         
-        
             else {
               try {
-                await signUp.create({
-                  emailAddress: email,
-                  password:password
-                })
-        
-                await signUp.prepareEmailAddressVerification({ strategy:'email_code'})
+                const res = await axios.post(`${url}/auth/signup`,{email,name,password})
+                console.log(res)
                 alert('user created successfully');
                 setVerificationButton(0)
                 setTimeout(() => { setVerification(true) }, 2000);
-              } catch (err:unknown) {
-        
-                const error = err as { errors?: { code: string }[] };
-        
-                if( error?.errors && error?.errors[0]?.code === 'form_identifier_exists'){
-                  setTimeout(()=>{
-                    alert('That email address is taken. Please try another.')
-                    setLoading(false)
-                  },2000)
-                }
-                else if(error?.errors && error?.errors[0]?.code === 'form_param_format_invalid'){
-                  setTimeout(()=>{
-                    alert('invalid email format')
-                    setLoading(false)
-                  },2000)
-                }
-                else{
-                  alert(JSON.stringify(error?.errors && error?.errors[0]?.code))
+              } catch (error) {
+                  alert(JSON.stringify(error))
                   setLoading(false)
                   console.log(JSON.stringify(error))
                   console.log(error);
-                }
-              }
-            }
+            }}
           } 
 
         const RegisterVerification =async({ code, setLoading }: VerificationProps) => {

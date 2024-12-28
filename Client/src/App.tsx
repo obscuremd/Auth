@@ -9,13 +9,13 @@ function App() {
 
   return (
     <div className="relative bg-background-500 p-4 text-grayscale-500  min-h-screen">
-      <SignedIn>
-        <Navigation/>
+      {/* <SignedIn>
+        <Navigation/> */}
         {/* <Form/> */}
-      </SignedIn>
-      <SignedOut>
+      {/* </SignedIn> */}
+      {/* <SignedOut> */}
         <Auth/>
-      </SignedOut>
+      {/* </SignedOut> */}
     </div>
   )
 }

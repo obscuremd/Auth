@@ -11,6 +11,7 @@ const Auth = () => {
 
   
   const [email , setEmail] = useState('')
+  const [name , setName] = useState('')
   const [password , setPassword] = useState('')
 
   const [code, setCode] = useState('')
@@ -56,6 +57,7 @@ const Auth = () => {
           :
           // inputs
           <>
+            <Input InputFunction={(e)=>setName(e.target.value)} stretch placeholder="name" outside_icon={false} inside_icon={<User/>} />
             <Input InputFunction={(e)=>setEmail(e.target.value)} stretch placeholder="email" outside_icon={false} inside_icon={<User/>} />
             <Input InputFunction={(e)=>setPassword(e.target.value)} stretch placeholder="password" outside_icon={false} inside_icon={<Lock/>} />
             <div className="flex items-center gap-3">
@@ -72,7 +74,7 @@ const Auth = () => {
               ?<l-line-wobble size="80" stroke="5" bg-opacity="0.1" speed="1.75" color="white" />
               :<>
                 <Button text="Login" onclick={()=>Login({email, password, setLoading, setVerification, setVerificationButton})} color="primary"  size="md" rounded="full"/>
-                <Button text="Sign Up" onclick={()=>Register({email, password, setLoading, setVerification, setVerificationButton})} color="text" outline  size="md" rounded="full"/>
+                <Button text="Sign Up" onclick={()=>Register({email, password, setLoading, setVerification, setVerificationButton, name})} color="text" outline  size="md" rounded="full"/>
               </>
               }
             </div>
