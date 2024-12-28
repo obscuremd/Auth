@@ -4,7 +4,7 @@ import User from "../Models/User.model";
 
 const router = Router();
 
-router.post("/", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const users = await User.find();
     res.status(201).json(users);
